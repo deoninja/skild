@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Terminal } from "lucide-react";
 import SkillCard from "@/components/SkillCard";
-import type { SkillRecord } from "./type";
+import type { SkillRecord } from "../../type";
 
 export const Route = createFileRoute("/")({ component: App });
 

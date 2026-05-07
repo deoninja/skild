@@ -18,6 +18,7 @@ const SkillCard = ({
 	createdAt,
 	installCommand,
 	tags,
+	slug,
 }: SkillRecord) => {
 	const [isCopied, setIsCopied] = useState(false);
 
@@ -36,7 +37,7 @@ const SkillCard = ({
 	return (
 		<article className="skill-card">
 			<Link
-				to={"/skill/"}
+				to={`/skill/${slug}`}
 				tabIndex={-1}
 				aria-label={`Open ${title}`}
 				className="overlay"
@@ -104,7 +105,11 @@ const SkillCard = ({
 						</div>
 					</div>
 					<div className="actions">
-						<Link to={"/skill/"} className="open" title={`Open ${title}`}>
+						<Link
+							to={`/skill/${slug}`}
+							className="open"
+							title={`Open ${title}`}
+						>
 							<span>Open</span>
 							<ArrowUpRight size={14} />
 						</Link>
