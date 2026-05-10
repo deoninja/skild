@@ -1,25 +1,28 @@
+import { Show } from "@clerk/tanstack-react-start";
 import { Link } from "@tanstack/react-router";
-import {LogIn} from "lucide-react";
+
+import { LogIn } from "lucide-react";
 
 const Navbar = () => (
-    <nav className="navbar">
-        <div className="brand">
-            <div className="mark">
-                <div className="glyph" />
-            </div>
-            <Link to='/'>
-                <span>Skild</span>
-            </Link>
-        </div>
+	<nav className="navbar">
+		<div className="brand">
+			<div className="mark">
+				<div className="glyph" />
+			</div>
+			<Link to="/">
+				<span>Skild</span>
+			</Link>
+		</div>
 
-        <div className="actions">
-            <Link to="/sign-in/$userId" className="btn-primary">
-                <LogIn />
-                Sign In
-            </Link>
-
-        </div>
-    </nav>
-)
+		<div className="actions">
+			<Show when="signed-out">
+				<Link to="/sign-in/$" className="btn-primary">
+					<LogIn size={16} />
+					Sign In
+				</Link>
+			</Show>
+		</div>
+	</nav>
+);
 
 export default Navbar;
