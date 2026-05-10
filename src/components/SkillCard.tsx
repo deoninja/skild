@@ -11,6 +11,7 @@ import { useState } from "react";
 import type { SkillRecord } from "../../type";
 
 const SkillCard = ({
+const SkillCard = ({
 	authorEmail,
 	category,
 	description,
