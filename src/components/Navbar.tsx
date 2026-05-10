@@ -1,4 +1,4 @@
-import { Show } from "@clerk/tanstack-react-start";
+import { Show, SignedOut } from "@clerk/tanstack-react-start";
 import { Link } from "@tanstack/react-router";
 
 import { LogIn } from "lucide-react";
@@ -15,12 +15,12 @@ const Navbar = () => (
 		</div>
 
 		<div className="actions">
-			<Show when="signed-out">
-				<Link to="/sign-in/$" className="btn-primary">
+			<SignedOut>
+				<Link to="/sign-in/$" params={{ _splat: "" }} className="btn-primary">
 					<LogIn size={16} />
 					Sign In
 				</Link>
-			</Show>
+			</SignedOut>
 		</div>
 	</nav>
 );
