@@ -5,8 +5,8 @@ import type { SkillRecord } from "../../type";
 
 export const Route = createFileRoute("/")({ component: App });
 
-const dummySkills: SkillRecord[] = [
-	{
+import { dummySkills } from "@/lib/data/dummySkills";
+/*
 		id: "skill-001",
 		title: "TypeScript Proficiency",
 		slug: "typescript-proficiency",
@@ -71,7 +71,7 @@ const dummySkills: SkillRecord[] = [
 		authorClerkId: null,
 		authorEmail: null,
 	},
-];
+*/
 
 function App() {
 	return (
