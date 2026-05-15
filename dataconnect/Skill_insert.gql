@@ -2,6 +2,6 @@
 # Only one un-named mutation is allowed per file.
 mutation {
   skill_insert(
-    data: {id: "11111111222233334444555555555558", authorClerckId: "user_3DRqUYkncSFmdXEX7Prbt5ZaWRe", createdAt: "2026-05-11T14:01:36.851Z", description: "Expertise in managing complex UI state using Redux, Zustand, or Context API.", installCommand: "npm install react-redux @reduxjs/toolkit", promptConfig: "You are a professional optimization engineer expert in state management.", tags: ["ai-agent", "engineering", "react", "redux", "state-management"], title: "Optimize state", usageExamples: "review the code and optimized state management"}
+    data: {id: "11111111222233334444555555555558", authorClerkId: "user_3DRqUYkncSFmdXEX7Prbt5ZaWRe", createdAt: "2026-05-11T14:01:36.851Z", description: "Expertise in managing complex UI state using Redux, Zustand, or Context API.", installCommand: "npm install react-redux @reduxjs/toolkit", promptConfig: "You are a professional optimization engineer expert in state management.", tags: ["ai-agent", "engineering", "react", "redux", "state-management"], title: "Optimize state", usageExamples: "review the code and optimized state management"}
   )
 }
