@@ -3,7 +3,7 @@
 # Only one un-named query is allowed per file.
 query {
   users{
-    clerckId
+    clerkId
     email
     username
     imageUrl

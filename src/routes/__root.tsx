@@ -1,26 +1,25 @@
-// import ClerkProvider from "../integrations/clerk/provider";
-// import { ClerkProvider } from "@clerk/tanstack-react-start";
-
-import { ClerkProvider } from "@clerk/tanstack-react-start";
-import { PostHogProvider } from "@posthog/react";
+import { useUser } from "@clerk/tanstack-react-start";
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import type { QueryClient } from "@tanstack/react-query";
 import {
 	createRootRouteWithContext,
 	HeadContent,
 	Scripts,
-	useRouterState,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import { PostHogProvider, usePostHog } from "posthog-js/react";
+import { useEffect } from "react";
 import Crosshair from "#/components/Crosshair";
 import Navbar from "#/components/Navbar";
-
+import AppClerkProvider from "../integrations/clerk/provider";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import appCss from "../styles.css?url";
 
 interface MyRouterContext {
 	queryClient: QueryClient;
 }
+
+const THEME_INIT_SCRIPT = `(function(){try{var stored=window.localStorage.getItem('theme');var mode=(stored==='light'||stored==='dark'||stored==='auto')?stored:'auto';var prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;var resolved=mode==='auto'?(prefersDark?'dark':'light'):mode;var root=document.documentElement;root.classList.remove('light','dark');root.classList.add(resolved);if(mode==='auto'){root.removeAttribute('data-theme')}else{root.setAttribute('data-theme',mode)}root.style.colorScheme=resolved;}catch(e){}})();`;
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
 	head: () => ({
@@ -49,57 +48,77 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 		],
 	}),
 	shellComponent: RootDocument,
-	notFoundComponent: () => (
-		<div className="flex flex-col items-center justify-center py-32 gap-4">
-			<h1 className="text-4xl font-bold">404</h1>
-			<p className="text-muted-foreground">Page not found</p>
-		</div>
-	),
 });
 
+function PostHogUserIdentifier() {
+	const { user, isSignedIn } = useUser();
+	const posthog = usePostHog();
+
+	useEffect(() => {
+		if (isSignedIn && user) {
+			posthog.identify(user.id, {
+				email: user.primaryEmailAddress?.emailAddress,
+				name: user.fullName,
+			});
+		} else if (isSignedIn === false) {
+			posthog.reset();
+		}
+	}, [isSignedIn, user, posthog]);
+
+	return null;
+}
+
 function RootDocument({ children }: { children: React.ReactNode }) {
-	const routerState = useRouterState();
 	return (
-		<html lang="en">
+		<html lang="en" suppressHydrationWarning>
 			<head>
+				<script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
 				<HeadContent />
 			</head>
 			<body className="font-sans antialiased wrap-anywhere">
 				<PostHogProvider
 					apiKey={import.meta.env.VITE_PUBLIC_POSTHOG_PROJECT_TOKEN}
 					options={{
-						api_host: import.meta.env.VITE_PUBLIC_POSTHOG_HOST,
-						defaults: "2026-01-30",
+						api_host: "/ingest",
+						ui_host:
+							import.meta.env.VITE_PUBLIC_POSTHOG_HOST ||
+							"https://us.posthog.com",
+						defaults: "2025-05-24",
+						capture_exceptions: true,
+						debug: import.meta.env.DEV,
 					}}
 				>
-				<ClerkProvider routerContext={routerState}>
-					<div id="root-layout">
-						<header>
-							<div className="frame">
-								<Navbar />
-								<Crosshair />
-								<Crosshair />
-							</div>
-						</header>
-						<main>
-							<div className="frame">{children}</div>
-						</main>
-					</div>
-					<TanStackDevtools
-						config={{
-							position: "bottom-right",
-						}}
-						plugins={[
-							{
-								name: "Tanstack Router",
-								render: <TanStackRouterDevtoolsPanel />,
-							},
-							TanStackQueryDevtools,
-						]}
-					/>
-					<Scripts />
-				</ClerkProvider>
+					<AppClerkProvider>
+						<PostHogUserIdentifier />
+						<div id="root-layout">
+							<header>
+								<div className="frame">
+									<Navbar />
+									<Crosshair />
+									<Crosshair />
+								</div>
+							</header>
+
+							<main>
+								<div className="frame">{children}</div>
+							</main>
+						</div>
+
+						<TanStackDevtools
+							config={{
+								position: "bottom-right",
+							}}
+							plugins={[
+								{
+									name: "Tanstack Router",
+									render: <TanStackRouterDevtoolsPanel />,
+								},
+								TanStackQueryDevtools,
+							]}
+						/>
+					</AppClerkProvider>
 				</PostHogProvider>
+				<Scripts />
 			</body>
 		</html>
 	);

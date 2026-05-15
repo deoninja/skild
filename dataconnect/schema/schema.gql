@@ -1,6 +1,6 @@
 # 1. User Table
 type User @table(key: "clerkId") {
-    clerckId: String! @unique
+    clerkId: String! @unique
     email: String!
     username: String
     imageUrl: String

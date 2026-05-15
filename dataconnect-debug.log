@@ -1,38 +1,131 @@
-I0511 22:09:20.518398   21040 load.go:31] Reloading schema and connectors...
-I0511 22:09:20.566541   21040 control.go:100] [projects/emulator/locations/emulator/services/skild-6d9b5-service 4ee2] UpdateResources(): done
-Main schema: sources: schema\schema.gql [549B] 
+I0512 21:44:20.375144   15564 load.go:31] Reloading schema and connectors...
+I0512 21:44:20.488313   15564 control.go:100] [projects/emulator/locations/emulator/services/skild-6d9b5-2-service aed7] UpdateResources(): done
+Main schema: sources: schema\schema.gql [547B] 
 Connector "example": sources: 
-E0511 22:09:20.573597   21040 load.go:95] Errors generating SDK: [connector "example"]: invalid Data Connect Connector no query found in connector
-I0511 22:09:20.576238   21040 collector.go:107] schema extensions wrote into "C:\\Users\\Deo\\OneDrive\\Desktop\\TanStack Start\\skild\\dataconnect\\.dataconnect\\schema"
-Generated sources: main\input.gql [16070B] main\relation.gql [6588B] prelude.gql [84989B] main\query.gql [2404B] main\mutation.gql [6444B] main\implicit.gql [268B] 
-I0511 22:09:20.576238   21040 load.go:109] Finished reloading
-I0511 22:09:20.577819   21040 dev.go:104] Listening on address (HTTP + gRPC): 127.0.0.1:9399
-I0511 22:09:20.577819   21040 dev.go:104] Listening on address (HTTP + gRPC): [::1]:9399
-I0511 22:09:25.866739   21040 migrate.go:24] Running migration SQL:
-Step 1: CREATE EXTENSION IF NOT EXISTS "uuid-ossp"
-Step 2: CREATE TABLE "public"."user" ("clerck_id" text NOT NULL, "email" text NOT NULL, "image_url" text NULL, "username" text NULL, PRIMARY KEY ("clerck_id"))
-Step 3: CREATE UNIQUE INDEX "user_clerckId_uidx" ON "public"."user" ("clerck_id")
-Step 4: CREATE TABLE "public"."skill" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "author_clerck_id" text NOT NULL, "created_at" timestamptz NOT NULL, "description" text NOT NULL, "install_command" text NOT NULL, "prompt_config" text NOT NULL, "tags" text[] NOT NULL, "title" text NOT NULL, "usage_examples" text NOT NULL, PRIMARY KEY ("id"), CONSTRAINT "skill_author_clerck_id_fkey" FOREIGN KEY ("author_clerck_id") REFERENCES "public"."user" ("clerck_id") ON DELETE CASCADE)
-Step 5: CREATE INDEX "skill_authorClerckId_idx" ON "public"."skill" ("author_clerck_id")
-I0511 22:09:25.971122   21040 control.go:100] [projects/emulator/locations/emulator/services/skild-6d9b5-service 8003] UpdateResources(): done
-Main schema: sources: schema\schema.gql [549B] 
+E0512 21:44:20.504639   15564 load.go:95] Errors generating SDK: [connector "example"]: invalid Data Connect Connector no query found in connector
+I0512 21:44:20.513244   15564 collector.go:107] schema extensions wrote into "C:\\Users\\Deo\\OneDrive\\Desktop\\TanStack Start\\skild\\dataconnect\\.dataconnect\\schema"
+Generated sources: prelude.gql [84989B] main\input.gql [16039B] main\relation.gql [6581B] main\query.gql [2404B] main\mutation.gql [6444B] main\implicit.gql [266B] 
+I0512 21:44:20.513244   15564 load.go:109] Finished reloading
+I0512 21:44:20.515245   15564 dev.go:104] Listening on address (HTTP + gRPC): 127.0.0.1:9399
+I0512 21:44:20.515245   15564 dev.go:104] Listening on address (HTTP + gRPC): [::1]:9399
+I0512 21:44:25.554111   15564 migrate.go:24] Running migration SQL:
+Step 1: ALTER TABLE "public"."user" DROP CONSTRAINT "user_pkey", DROP COLUMN "clerck_id", ADD COLUMN "clerk_id" text NOT NULL, ADD PRIMARY KEY ("clerk_id")
+Step 2: CREATE UNIQUE INDEX "user_clerkId_uidx" ON "public"."user" ("clerk_id")
+Step 3: ALTER TABLE "public"."skill" DROP COLUMN "author_clerck_id", ADD COLUMN "author_clerk_id" text NOT NULL, ADD CONSTRAINT "skill_author_clerk_id_fkey" FOREIGN KEY ("author_clerk_id") REFERENCES "public"."user" ("clerk_id") ON DELETE CASCADE
+Step 4: CREATE INDEX "skill_authorClerkId_idx" ON "public"."skill" ("author_clerk_id")
+E0512 21:44:25.569254   15564 service.go:130] [projects/emulator/locations/emulator/services/skild-6d9b5-2-service 3902] failed to migrate schema: SQL migration error: failed to apply migration: failed to execute SQL migration
+step 1 modify "user" table: pq: cannot drop constraint user_pkey on table "user" because other objects depend on it
+SQL: ALTER TABLE "public"."user" DROP CONSTRAINT "user_pkey", DROP COLUMN "clerck_id", ADD COLUMN "clerk_id" text NOT NULL, ADD PRIMARY KEY ("clerk_id")
+Original plan:
+Step 1: ALTER TABLE "public"."user" DROP CONSTRAINT "user_pkey", DROP COLUMN "clerck_id", ADD COLUMN "clerk_id" text NOT NULL, ADD PRIMARY KEY ("clerk_id")
+Step 2: CREATE UNIQUE INDEX "user_clerkId_uidx" ON "public"."user" ("clerk_id")
+Step 3: ALTER TABLE "public"."skill" DROP COLUMN "author_clerck_id", ADD COLUMN "author_clerk_id" text NOT NULL, ADD CONSTRAINT "skill_author_clerk_id_fkey" FOREIGN KEY ("author_clerk_id") REFERENCES "public"."user" ("clerk_id") ON DELETE CASCADE
+Step 4: CREATE INDEX "skill_authorClerkId_idx" ON "public"."skill" ("author_clerk_id")
+I0512 21:44:25.572399   15564 control.go:100] [projects/emulator/locations/emulator/services/skild-6d9b5-2-service dd07] UpdateResources(): done
+Main schema: sources: schema\schema.gql [547B] 
 Connector "example": sources: 
-I0511 22:09:25.974140   21040 configure_emulator.go:21] ConfigureEmulator successed
-Request: service_id:  "skild-6d9b5-service"
-connection_string:  "postgres://127.0.0.1:5433/skild-6d9b5-database?sslmode=disable"
-database:  "skild-6d9b5-database"
+I0512 21:44:25.575625   15564 configure_emulator.go:21] ConfigureEmulator successed
+Request: service_id:  "skild-6d9b5-2-service"
+connection_string:  "postgres://127.0.0.1:5433/skild-6d9b5-3-database?sslmode=disable"
+database:  "skild-6d9b5-3-database"
 
 Response: 
-I0511 22:38:27.691377   21040 execute.go:57] Database ping is quick (likely cached), took 1.6241ms
-I0511 22:38:27.695706   21040 engine.go:209] [projects/emulator/locations/emulator/services/skild-6d9b5-service 8003] ExecuteGraphql query : succeeded. 
-I0511 22:38:51.260858   21040 execute.go:57] Database ping is quick (likely cached), took 966.3µs
-I0511 22:38:51.262180   21040 engine.go:209] [projects/emulator/locations/emulator/services/skild-6d9b5-service 8003] ExecuteGraphql query : succeeded. 
-I0511 22:44:20.583288   21040 load.go:31] Reloading schema and connectors...
-E0511 22:44:20.591652   21040 load.go:73] Could not load sources: 
-Errors: schema\schema.gql:2:7: On User @table(key): Reference an unknown field: clerkId
-schema\schema.gql:14:6: On Skill.author @ref(references): Reference missing field User.clerkId
-I0511 22:44:20.602034   21040 collector.go:107] schema extensions wrote into "C:\\Users\\Deo\\OneDrive\\Desktop\\TanStack Start\\skild\\dataconnect\\.dataconnect\\schema"
-Generated sources: prelude.gql [84989B] main\implicit.gql [268B] main\input.gql [16070B] main\relation.gql [6588B] main\query.gql [2404B] main\mutation.gql [6444B] 
-I0511 22:44:20.602553   21040 load.go:74] Finished reloading
-I0511 22:49:46.732434   21040 execute.go:57] Database ping is quick (likely cached), took 620.2µs
-I0511 22:49:46.736129   21040 engine.go:209] [projects/emulator/locations/emulator/services/skild-6d9b5-service 8003] ExecuteGraphql query : succeeded. 
+I0512 21:44:42.517974   15564 execute.go:57] Database ping is quick (likely cached), took 1.9133ms
+W0512 21:44:42.520597   15564 engine.go:213] [projects/emulator/locations/emulator/services/skild-6d9b5-2-service dd07] ExecuteGraphql query : failed. 
+Auth: admin
+Errors: [message:"Invalid SQL statement"  path:{values:{string_value:"skills"}}  extensions:{code:FAILED_PRECONDITION  debug_details:"PostgreSQL runtime error (err_code: 42703): pq: column _user.clerk_id does not exist\nSELECT coalesce(json_agg(j), '[]') FROM (SELECT jsonb_build_object('author', (SELECT jsonb_build_object('clerkId', \"_user\".\"clerk_id\", 'email', \"_user\".\"email\", 'username', \"_user\".\"username\", 'imageUrl', \"_user\".\"image_url\") FROM \"public\".\"user\" AS \"_user\" WHERE (\"_user\".\"clerk_id\") = (\"skill\".\"author_clerk_id\")), 'title', \"title\", 'description', \"description\", 'tags', \"tags\", 'installCommand', \"install_command\", 'promptConfig', \"prompt_config\", 'usageExamples', \"usage_examples\", 'createdAt', to_char((\"created_at\") AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS.US\"Z\"')) AS j FROM \"public\".\"skill\" LIMIT 100) AS x\nParams: []"}]
+Data Fields: [skills]
+sources: input [302B] 
+I0512 21:45:56.634622   15564 execute.go:57] Database ping is quick (likely cached), took 1.0529ms
+W0512 21:45:56.636136   15564 engine.go:213] [projects/emulator/locations/emulator/services/skild-6d9b5-2-service dd07] ExecuteGraphql mutation : failed. 
+Auth: admin
+Errors: [message:"Invalid SQL statement"  path:{values:{string_value:"skill_insert"}}  extensions:{code:FAILED_PRECONDITION  debug_details:"PostgreSQL runtime error (err_code: 42703): pq: column \"author_clerk_id\" of relation \"skill\" does not exist\nWITH \"skill_insert_temp\" AS (INSERT INTO \"public\".\"skill\" (\"author_clerk_id\",\"created_at\",\"description\",\"id\",\"install_command\",\"prompt_config\",\"tags\",\"title\",\"usage_examples\") VALUES ('user_3DRqUYkncSFmdXEX7Prbt5ZaWRe',timestamptz '2026-05-11T14:01:36.851000Z','Expertise in managing complex UI state using Redux, Zustand, or Context API.','11111111-2222-3333-4444-555555555558'::uuid,'npm install react-redux @reduxjs/toolkit','You are a professional optimization engineer expert in state management.',array_remove(ARRAY ['ai-agent','engineering','react','redux','state-management'], NULL),'Optimize state','review the code and optimized state management') RETURNING jsonb_build_object('id', REPLACE(CAST((\"id\") AS text), '-', '')) AS j) SELECT * FROM \"skill_insert_temp\"\nParams: []"}]
+Data Fields: [skill_insert]
+sources: input [686B] 
+I0512 21:46:01.994969   15564 execute.go:57] Database ping is quick (likely cached), took 571.2µs
+W0512 21:46:01.996162   15564 engine.go:213] [projects/emulator/locations/emulator/services/skild-6d9b5-2-service dd07] ExecuteGraphql mutation : failed. 
+Auth: admin
+Errors: [message:"Invalid SQL statement"  path:{values:{string_value:"skill_insert"}}  extensions:{code:FAILED_PRECONDITION  debug_details:"PostgreSQL runtime error (err_code: 42703): pq: column \"author_clerk_id\" of relation \"skill\" does not exist\nWITH \"skill_insert_temp\" AS (INSERT INTO \"public\".\"skill\" (\"author_clerk_id\",\"created_at\",\"description\",\"id\",\"install_command\",\"prompt_config\",\"tags\",\"title\",\"usage_examples\") VALUES ('user_3DRqUYkncSFmdXEX7Prbt5ZaWRe',timestamptz '2026-05-11T14:01:36.851000Z','Expertise in managing complex UI state using Redux, Zustand, or Context API.','11111111-2222-3333-4444-555555555558'::uuid,'npm install react-redux @reduxjs/toolkit','You are a professional optimization engineer expert in state management.',array_remove(ARRAY ['ai-agent','engineering','react','redux','state-management'], NULL),'Optimize state','review the code and optimized state management') RETURNING jsonb_build_object('id', REPLACE(CAST((\"id\") AS text), '-', '')) AS j) SELECT * FROM \"skill_insert_temp\"\nParams: []"}]
+Data Fields: [skill_insert]
+sources: input [686B] 
+I0512 21:46:10.875767   15564 execute.go:57] Database ping is quick (likely cached), took 1.0237ms
+W0512 21:46:10.876695   15564 engine.go:213] [projects/emulator/locations/emulator/services/skild-6d9b5-2-service dd07] ExecuteGraphql query : failed. 
+Auth: admin
+Errors: [message:"Invalid SQL statement"  path:{values:{string_value:"users"}}  extensions:{code:FAILED_PRECONDITION  debug_details:"PostgreSQL runtime error (err_code: 42703): pq: column \"clerk_id\" does not exist\nSELECT coalesce(json_agg(j), '[]') FROM (SELECT jsonb_build_object('clerkId', \"clerk_id\", 'email', \"email\", 'username', \"username\", 'imageUrl', \"image_url\") AS j FROM \"public\".\"user\" LIMIT 100) AS x\nParams: []"}]
+Data Fields: [users]
+sources: input [171B] 
+I0512 21:46:31.351475   15564 execute.go:57] Database ping is quick (likely cached), took 1.0985ms
+W0512 21:46:31.352513   15564 engine.go:213] [projects/emulator/locations/emulator/services/skild-6d9b5-2-service dd07] ExecuteGraphql mutation : failed. 
+Auth: admin
+Errors: [message:"Invalid SQL statement"  path:{values:{string_value:"user_insert"}}  extensions:{code:FAILED_PRECONDITION  debug_details:"PostgreSQL runtime error (err_code: 42703): pq: column \"clerk_id\" of relation \"user\" does not exist\nWITH \"user_insert_temp\" AS (INSERT INTO \"public\".\"user\" (\"clerk_id\",\"email\",\"image_url\",\"username\") VALUES ('user_3DRqUYkncSFmdXEX7Prbt5ZaWRe','deoagent@gmail.com','https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvb2F1dGhfZ29vZ2xlL2ltZ18zRFJxVVk5VE1YVWdNTFk2NGJzMDJsWVpuMk4ifQ','deoagent') RETURNING jsonb_build_object('clerkId', \"clerk_id\") AS j) SELECT * FROM \"user_insert_temp\"\nParams: []"}]
+Data Fields: [user_insert]
+sources: input [399B] 
+I0512 21:47:20.568610   15564 execute.go:57] Database ping is quick (likely cached), took 525.2µs
+W0512 21:47:20.579032   15564 engine.go:213] [projects/emulator/locations/emulator/services/skild-6d9b5-2-service dd07] ExecuteGraphql query GetSkills: failed. 
+Auth: admin
+Errors: [message:"SQL execution failed"  path:{values:{string_value:"skills"}}  extensions:{code:INTERNAL  debug_details:"SQL runtime error: pq: unexpected message 'E'; expected ReadyForQuery\nSELECT coalesce(json_agg(j), '[]') FROM (SELECT jsonb_build_object('id', REPLACE(CAST((\"id\") AS text), '-', ''), 'title', \"title\", 'description', \"description\", 'tags', \"tags\", 'createdAt', to_char((\"created_at\") AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS.US\"Z\"'), 'installCommand', \"install_command\", 'author', (SELECT jsonb_build_object('username', \"_user\".\"username\", 'imageUrl', \"_user\".\"image_url\", 'clerkId', \"_user\".\"clerk_id\", 'email', \"_user\".\"email\") FROM \"public\".\"user\" AS \"_user\" WHERE (\"_user\".\"clerk_id\") = (\"skill\".\"author_clerk_id\"))) AS j FROM \"public\".\"skill\" WHERE CASE WHEN ( $1 ::boolean) THEN ((CASE WHEN ( $2 ::boolean) THEN ((\"title\") LIKE ('%'|| $3 ::text||'%')) ELSE (false) END OR CASE WHEN ( $4 ::boolean) THEN ((\"description\") LIKE ('%'|| $5 ::text||'%')) ELSE (false) END)) ELSE (true) END ORDER BY \"created_at\" DESC LIMIT 100) AS x\nParams: [true true  true ]"}]
+Data Fields: [skills]
+sources: input [627B] 
+I0512 21:51:10.516541   15564 load.go:31] Reloading schema and connectors...
+E0512 21:51:11.548733   15564 service.go:130] [projects/emulator/locations/emulator/services/skild-6d9b5-2-service dd07] failed to migrate schema: SQL migration error: failed to create migrator: postgres: scanning system variables: dial tcp 127.0.0.1:5433: connectex: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.
+W0512 21:51:11.553164   15564 control.go:74] [projects/emulator/locations/emulator/services/skild-6d9b5-2-service 8bbb] connector "example" has errors: connectors\queries.gql:12:17: Variable "$limit" is not defined by operation "GetSkills".
+
+sources: connectors\queries.gql [627B] 
+I0512 21:51:11.553164   15564 control.go:100] [projects/emulator/locations/emulator/services/skild-6d9b5-2-service 8bbb] UpdateResources(): done
+Main schema: sources: schema\schema.gql [547B] 
+Connector "example": sources: connectors\queries.gql [627B] 
+E0512 21:51:11.553720   15564 load.go:73] Could not load sources: 
+Errors: connectors\queries.gql:12:17: Variable "$limit" is not defined by operation "GetSkills".
+I0512 21:51:11.559165   15564 collector.go:107] schema extensions wrote into "C:\\Users\\Deo\\OneDrive\\Desktop\\TanStack Start\\skild\\dataconnect\\.dataconnect\\schema"
+Generated sources: prelude.gql [84989B] main\mutation.gql [6444B] main\implicit.gql [266B] main\input.gql [16039B] main\relation.gql [6581B] main\query.gql [2404B] 
+I0512 21:51:11.559165   15564 load.go:74] Finished reloading
+I0512 21:52:30.517864   15564 load.go:31] Reloading schema and connectors...
+I0512 21:52:30.613480   15564 migrate.go:24] Running migration SQL:
+Step 1: ALTER TABLE "public"."user" DROP CONSTRAINT "user_pkey", DROP COLUMN "clerck_id", ADD COLUMN "clerk_id" text NOT NULL, ADD PRIMARY KEY ("clerk_id")
+Step 2: CREATE UNIQUE INDEX "user_clerkId_uidx" ON "public"."user" ("clerk_id")
+Step 3: ALTER TABLE "public"."skill" DROP COLUMN "author_clerck_id", ADD COLUMN "author_clerk_id" text NOT NULL, ADD CONSTRAINT "skill_author_clerk_id_fkey" FOREIGN KEY ("author_clerk_id") REFERENCES "public"."user" ("clerk_id") ON DELETE CASCADE
+Step 4: CREATE INDEX "skill_authorClerkId_idx" ON "public"."skill" ("author_clerk_id")
+E0512 21:52:30.615597   15564 service.go:130] [projects/emulator/locations/emulator/services/skild-6d9b5-2-service 8bbb] failed to migrate schema: SQL migration error: failed to apply migration: failed to execute SQL migration
+step 1 modify "user" table: pq: cannot drop constraint user_pkey on table "user" because other objects depend on it
+SQL: ALTER TABLE "public"."user" DROP CONSTRAINT "user_pkey", DROP COLUMN "clerck_id", ADD COLUMN "clerk_id" text NOT NULL, ADD PRIMARY KEY ("clerk_id")
+Original plan:
+Step 1: ALTER TABLE "public"."user" DROP CONSTRAINT "user_pkey", DROP COLUMN "clerck_id", ADD COLUMN "clerk_id" text NOT NULL, ADD PRIMARY KEY ("clerk_id")
+Step 2: CREATE UNIQUE INDEX "user_clerkId_uidx" ON "public"."user" ("clerk_id")
+Step 3: ALTER TABLE "public"."skill" DROP COLUMN "author_clerck_id", ADD COLUMN "author_clerk_id" text NOT NULL, ADD CONSTRAINT "skill_author_clerk_id_fkey" FOREIGN KEY ("author_clerk_id") REFERENCES "public"."user" ("clerk_id") ON DELETE CASCADE
+Step 4: CREATE INDEX "skill_authorClerkId_idx" ON "public"."skill" ("author_clerk_id")
+W0512 21:52:30.620103   15564 control.go:74] [projects/emulator/locations/emulator/services/skild-6d9b5-2-service da5f] connector "example" has errors: connectors\queries.gql:12:17: Variable "$limit" is not defined by operation "GetSkills".
+
+sources: connectors\queries.gql [629B] 
+I0512 21:52:30.620103   15564 control.go:100] [projects/emulator/locations/emulator/services/skild-6d9b5-2-service da5f] UpdateResources(): done
+Main schema: sources: schema\schema.gql [547B] 
+Connector "example": sources: connectors\queries.gql [629B] 
+E0512 21:52:30.620103   15564 load.go:73] Could not load sources: 
+Errors: connectors\queries.gql:12:17: Variable "$limit" is not defined by operation "GetSkills".
+I0512 21:52:30.623841   15564 collector.go:107] schema extensions wrote into "C:\\Users\\Deo\\OneDrive\\Desktop\\TanStack Start\\skild\\dataconnect\\.dataconnect\\schema"
+Generated sources: main\mutation.gql [6444B] prelude.gql [84989B] main\implicit.gql [266B] main\input.gql [16039B] main\relation.gql [6581B] main\query.gql [2404B] 
+I0512 21:52:30.623841   15564 load.go:74] Finished reloading
+I0512 21:52:40.516427   15564 load.go:31] Reloading schema and connectors...
+I0512 21:52:40.592340   15564 migrate.go:24] Running migration SQL:
+Step 1: ALTER TABLE "public"."user" DROP CONSTRAINT "user_pkey", DROP COLUMN "clerck_id", ADD COLUMN "clerk_id" text NOT NULL, ADD PRIMARY KEY ("clerk_id")
+Step 2: CREATE UNIQUE INDEX "user_clerkId_uidx" ON "public"."user" ("clerk_id")
+Step 3: ALTER TABLE "public"."skill" DROP COLUMN "author_clerck_id", ADD COLUMN "author_clerk_id" text NOT NULL, ADD CONSTRAINT "skill_author_clerk_id_fkey" FOREIGN KEY ("author_clerk_id") REFERENCES "public"."user" ("clerk_id") ON DELETE CASCADE
+Step 4: CREATE INDEX "skill_authorClerkId_idx" ON "public"."skill" ("author_clerk_id")
+E0512 21:52:40.593486   15564 service.go:130] [projects/emulator/locations/emulator/services/skild-6d9b5-2-service da5f] failed to migrate schema: SQL migration error: failed to apply migration: failed to execute SQL migration
+step 1 modify "user" table: pq: cannot drop constraint user_pkey on table "user" because other objects depend on it
+SQL: ALTER TABLE "public"."user" DROP CONSTRAINT "user_pkey", DROP COLUMN "clerck_id", ADD COLUMN "clerk_id" text NOT NULL, ADD PRIMARY KEY ("clerk_id")
+Original plan:
+Step 1: ALTER TABLE "public"."user" DROP CONSTRAINT "user_pkey", DROP COLUMN "clerck_id", ADD COLUMN "clerk_id" text NOT NULL, ADD PRIMARY KEY ("clerk_id")
+Step 2: CREATE UNIQUE INDEX "user_clerkId_uidx" ON "public"."user" ("clerk_id")
+Step 3: ALTER TABLE "public"."skill" DROP COLUMN "author_clerck_id", ADD COLUMN "author_clerk_id" text NOT NULL, ADD CONSTRAINT "skill_author_clerk_id_fkey" FOREIGN KEY ("author_clerk_id") REFERENCES "public"."user" ("clerk_id") ON DELETE CASCADE
+Step 4: CREATE INDEX "skill_authorClerkId_idx" ON "public"."skill" ("author_clerk_id")
+I0512 21:52:40.596634   15564 control.go:100] [projects/emulator/locations/emulator/services/skild-6d9b5-2-service 1889] UpdateResources(): done
+Main schema: sources: schema\schema.gql [547B] 
+Connector "example": sources: connectors\queries.gql [645B] 
+I0512 21:52:40.608503   15564 codegen.go:101] [connector "example" javascriptSdk] Generating sources into "C:\\Users\\Deo\\OneDrive\\Desktop\\TanStack Start\\skild\\src\\dataconnect-generated"
+I0512 21:52:40.621128   15564 collector.go:107] schema extensions wrote into "C:\\Users\\Deo\\OneDrive\\Desktop\\TanStack Start\\skild\\dataconnect\\.dataconnect\\schema"
+Generated sources: main\input.gql [16039B] main\relation.gql [6581B] main\query.gql [2404B] prelude.gql [84989B] main\mutation.gql [6444B] main\implicit.gql [266B] 
+I0512 21:52:40.634390   15564 collector.go:107] connector "example" javascriptSdk wrote into "C:\\Users\\Deo\\OneDrive\\Desktop\\TanStack Start\\skild\\src\\dataconnect-generated"
+Generated sources: index.d.ts [1661B] index.cjs.js [1082B] react\package.json [460B] react\esm\package.json [17B] esm\index.esm.js [952B] esm\package.json [17B] package.json [853B] react\index.cjs.js [605B] .guides/usage.md [1571B] .guides/config.json [236B] react\esm\index.esm.js [581B] react\README.md [12918B] .guides/setup.md [1682B] README.md [8682B] react\index.d.ts [690B] 
+I0512 21:52:40.648761   15564 installsdk.go:86] Running command: C:\Users\Deo\AppData\Roaming\npm\npm.cmd install file:src\dataconnect-generated
+E0512 21:54:08.197993   15564 installsdk.go:88] Failed to install package: exit status 0xfffff02d
+I0512 21:54:08.197993   15564 load.go:109] Finished reloading

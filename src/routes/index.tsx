@@ -1,86 +1,42 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
 import { Terminal } from "lucide-react";
-import SkillCard from "@/components/SkillCard";
-import type { SkillRecord } from "../../type";
+import { usePostHog } from "posthog-js/react";
+import SkillCard from "#/components/SkillCard";
+import { getSkills } from "#/dataconnect-generated";
+import { dataConnect } from "#/lib/firebase";
 
-export const Route = createFileRoute("/")({ component: App });
+const getSkillsFn = createServerFn({ method: "GET" }).handler(async () => {
+	try {
+		const { data } = await getSkills(dataConnect, {
+			searchTerm: "",
+			limit: 10,
+		});
 
-import { dummySkills } from "@/lib/data/dummySkills";
-/*
-		id: "skill-001",
-		title: "TypeScript Proficiency",
-		slug: "typescript-proficiency",
-		description:
-			"Demonstrated ability to write type-safe, maintainable JavaScript using TypeScript.",
-		category: "Programming Languages",
-		tags: ["frontend", "backend", "typing", "interfaces", "generics"],
-		installCommand: "npm install typescript --save-dev",
-		createdAt: "2023-11-15T10:30:00Z",
-		authorClerkId: "clerk_abc123",
-		authorEmail: "alex.dev@example.com",
-	},
-	{
-		id: "skill-002",
-		title: "React State Management",
-		slug: "react-state-management",
-		description:
-			"Expertise in managing complex UI state using Redux, Zustand, or Context API.",
-		category: "Frontend Frameworks",
-		tags: ["react", "hooks", "state", "optimization", "performance"],
-		installCommand: "npm install react-redux @reduxjs/toolkit",
-		createdAt: "2023-12-02T14:20:00Z",
-		authorClerkId: "clerk_def456",
-		authorEmail: "sam.builder@example.com",
-	},
-	{
-		id: "skill-003",
-		title: "Docker Containerization",
-		slug: "docker-containerization",
-		description:
-			"Packaging applications and dependencies into portable containers using Docker.",
-		category: "DevOps & Tools",
-		tags: ["containers", "CI/CD", "microservices", "images", "networking"],
-		installCommand: "docker pull node:20-alpine",
-		createdAt: null,
-		authorClerkId: "clerk_ghi789",
-		authorEmail: "jamie.ops@example.com",
-	},
-	{
-		id: "skill-004",
-		title: "API Security Best Practices",
-		slug: "api-security-best-practices",
-		description:
-			"Implementing secure authentication, authorization, and threat mitigation in REST/GraphQL APIs.",
-		category: "Backend & Security",
-		tags: ["oauth2", "jwt", "rate-limiting", "input-validation", "tls"],
-		installCommand: "npm install express-rate-limit helmet joi",
-		createdAt: "2024-01-10T09:15:00Z",
-		authorClerkId: "clerk_jkl012",
-		authorEmail: "taylor.secure@example.com",
-	},
-	{
-		id: "skill-005",
-		title: "GraphQL with Apollo Server",
-		slug: "graphql-apollo-server",
-		description:
-			"Building flexible, efficient APIs using GraphQL and Apollo Server in Node.js.",
-		category: "Backend & APIs",
-		tags: ["graphql", "resolvers", "schema", "subscriptions", "caching"],
-		installCommand: "npm install apollo-server graphql",
-		createdAt: "2024-02-28T16:45:00Z",
-		authorClerkId: null,
-		authorEmail: null,
-	},
-*/
+		return data.skills;
+	} catch (error) {
+		console.error(error);
+		return [];
+	}
+});
+
+export const Route = createFileRoute("/")({
+	component: App,
+	loader: () => getSkillsFn(),
+});
 
 function App() {
+	const posthog = usePostHog();
+
+	const skills = Route.useLoaderData();
+
 	return (
 		<div id="home">
 			<section className="hero">
 				<div className="copy">
 					<h1>
 						The Registry for <br />
-						<span className="text-gradient">Agentic intelligence</span>
+						<span className="text-gradient">Agentic Intelligence</span>
 					</h1>
 					<p>
 						A high-performance registry for procedural agent skills. Discover,
@@ -88,12 +44,21 @@ function App() {
 						workspace.
 					</p>
 				</div>
+
 				<div className="actions">
-					<Link to="/skills" className="btn-primary">
+					<Link
+						to="/skills"
+						className="btn-primary"
+						onClick={() => posthog.capture("browse_registry_clicked")}
+					>
 						<Terminal size={18} />
 						<span>Browse Registry</span>
 					</Link>
-					<Link to="/skills/new" className="btn-secondary">
+					<Link
+						to="/skills/new"
+						className="btn-secondary"
+						onClick={() => posthog.capture("publish_skill_clicked")}
+					>
 						Publish Skill
 					</Link>
 				</div>
@@ -102,17 +67,18 @@ function App() {
 			<section className="latest">
 				<div className="space-y-2">
 					<h2>
-						Recently Created
-						<span className="text-gradient"> Skills</span>
+						Recently Created <span className="text-gradient">Skills</span>
 					</h2>
 					<p>
+						{" "}
 						Latest skills loaded from database in descending creation order.
 					</p>
 				</div>
+
 				<div>
-					{dummySkills.length > 0 ? (
+					{skills.length > 0 ? (
 						<div className="skills-grid">
-							{dummySkills.map((skill) => (
+							{skills.map((skill) => (
 								<SkillCard key={skill.id} {...skill} />
 							))}
 						</div>
